@@ -1,3 +1,5 @@
+mod db_logic;
+
 #[macro_use] extern crate rocket;
 
 #[get("/")]
@@ -7,5 +9,6 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
+    db_logic::create_connection().unwrap();
     rocket::build().mount("/", routes![index])
 }
