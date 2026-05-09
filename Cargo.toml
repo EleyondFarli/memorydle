@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 rocket = "0.5.1"
-rusqlite = { version = "0.39.0", features = ["bundled"] }
+sqlx = {version = "0.8", features = ["runtime-tokio", "sqlite", "macros", "derive", "migrate"]}
