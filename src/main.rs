@@ -1,13 +1,37 @@
 #[macro_use] extern crate rocket;
 
+use rocket::time::{UtcDateTime};
 use sqlx::{Pool, Sqlite};
 
+// TODO: create multiple modules to better strutcure the project
 #[derive(sqlx::FromRow, Debug)]
 struct Image {
     id: i32,
     puzzle_id: i32,
     image_path: String,
     display_order: i8,
+}
+
+#[derive(sqlx::FromRow, Debug)]
+struct Country {
+    id: i32,
+    name: String,
+}
+
+#[derive(sqlx::FromRow, Debug)]
+struct User {
+    id: String,
+    username: String,
+    password_hash: String,
+    created_at: UtcDateTime,
+}
+
+#[derive(sqlx::FromRow, Debug)]
+struct User {
+    id: String,
+    username: String,
+    password_hash: String,
+    created_at: UtcDateTime,
 }
 
 #[get("/")]
