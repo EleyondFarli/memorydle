@@ -1,7 +1,9 @@
+mod api;
+
 #[macro_use] extern crate rocket;
 
-use rocket::time::{UtcDateTime};
 use sqlx::{Pool, Sqlite};
+use sqlx::types::chrono;
 
 // TODO: create multiple modules to better strutcure the project
 #[derive(sqlx::FromRow, Debug)]
@@ -23,15 +25,14 @@ struct User {
     id: String,
     username: String,
     password_hash: String,
-    created_at: UtcDateTime,
+    created_at: chrono::DateTime<chrono::Utc>,
 }
 
 #[derive(sqlx::FromRow, Debug)]
-struct User {
+struct Puzzle {
     id: String,
-    username: String,
-    password_hash: String,
-    created_at: UtcDateTime,
+    //TODO: Check if NaiveDate actually works here or I need to switch to DateTime
+    puzzle_date: chrono::NaiveDate,
 }
 
 #[get("/")]

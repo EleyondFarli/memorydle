@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 rocket = "0.5.1"
-sqlx = {version = "0.8", features = ["runtime-tokio", "sqlite", "macros", "derive", "migrate"]}
+chrono = {version = "0.4.44", features = ["serde"]}
+sqlx = {version = "0.8", features = ["runtime-tokio", "sqlite", "macros", "derive", "migrate", "chrono"]}
 dotenv = "0.15.0"
