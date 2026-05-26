@@ -1,9 +1,10 @@
 mod api;
 
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
-use sqlx::{Pool, Sqlite};
 use sqlx::types::chrono;
+use sqlx::{Pool, Sqlite};
 
 // TODO: create multiple modules to better strutcure the project
 #[derive(sqlx::FromRow, Debug)]
@@ -40,23 +41,39 @@ fn index() -> &'static str {
     "Hello, world!"
 }
 
+async fn fetch_daily_puzzle(connection: Pool<Sqlite>, date: &str) -> Option<Puzzle> {
+    let daily_puzzle: Option<Puzzle> =
+        sqlx::query_as("SELECT * FROM puzzles WHERE puzzle_date = $1")
+            .bind(date)
+            .fetch_optional(&connection)
+            .await
+            .unwrap();
+    return daily_puzzle;
+}
+
 async fn connect_to_db() -> Pool<Sqlite> {
     let db_url = "DATABASE_URL";
     let panic_message = &format!("{} must be set", db_url);
 
     let file_name = std::env::var(db_url).expect(panic_message);
-    let options = sqlx::sqlite::SqliteConnectOptions::new().filename(file_name).create_if_missing(false);
+    let options = sqlx::sqlite::SqliteConnectOptions::new()
+        .filename(file_name)
+        .create_if_missing(false);
 
     //TODO: Handle the bad connection instead of panicking
-    sqlx::sqlite::SqlitePool::connect_with(options).await.unwrap()
+    sqlx::sqlite::SqlitePool::connect_with(options)
+        .await
+        .unwrap()
 }
 
 async fn fetch_images(connection: Pool<Sqlite>) -> Vec<Image> {
-    let images:Vec<Image> = sqlx::query_as("SELECT * FROM images").fetch_all(&connection).await.unwrap();
+    let images: Vec<Image> = sqlx::query_as("SELECT * FROM images")
+        .fetch_all(&connection)
+        .await
+        .unwrap();
     println!("{:?}", images);
     images
 }
-
 
 #[launch]
 async fn rocket() -> _ {
